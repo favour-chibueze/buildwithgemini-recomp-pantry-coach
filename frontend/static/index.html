@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recomp &amp; Pantry Coach</title>
+<!-- Google Fonts & Material Symbols for A2UI icons and UI elements -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<style>
+  :root {
+    --accent: #059669;
+    --accent-hover: #047857;
+    --accent-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    --accent-subtle: #ecfdf5;
+    --accent-border: #a7f3d0;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-hover: #f1f5f9;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --code-bg: #f1f5f9;
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+    --macro-protein: #10b981;
+    --macro-carbs: #f59e0b;
+    --macro-fat: #0284c7;
+  }
+
+  /* Dark / Gym Mode Theme */
+  [data-theme="dark"] {
+    --accent: #10b981;
+    --accent-hover: #059669;
+    --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --accent-subtle: rgba(16, 185, 129, 0.15);
+    --accent-border: rgba(16, 185, 129, 0.35);
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-hover: #1f2937;
+    --text: #f9fafb;
+    --text-muted: #9ca3af;
+    --border: #1f2937;
+    --border-light: #374151;
+    --code-bg: #1e293b;
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    box-shadow: var(--shadow-xs);
+    z-index: 10;
+  }
+  .header-container {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+    flex-shrink: 0;
+  }
+  .header-titles {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .header-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .header-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .header-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+  }
+  .pantry-count-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  /* Chat Log Area */
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    max-width: 920px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    scroll-behavior: smooth;
+  }
+
+  /* Welcome Hero Banner */
+  .welcome-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    margin: 0.5rem 0 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent-gradient);
+  }
+  .welcome-icon {
+    font-size: 2.75rem;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+  }
+  .welcome-card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .welcome-card p {
+    margin: 0 auto 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    max-width: 620px;
+  }
+  .feature-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* Messages Dialogue Layout */
+  .msg-row {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    animation: fadeIn 0.25s ease-out;
+    width: 100%;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-row.user {
+    flex-direction: row-reverse;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-xs);
+  }
+  .avatar.agent {
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent-border);
+  }
+  .avatar.user {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  .msg-bubble-container {
+    max-width: 82%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    position: relative;
+  }
+  .msg-row.user .msg-bubble-container {
+    align-items: flex-end;
+  }
+
+  .bubble {
+    padding: 0.95rem 1.25rem;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    word-break: break-word;
+    position: relative;
+  }
+  .msg-row.agent .bubble {
+    border-top-left-radius: 4px;
+  }
+  .msg-row.user .bubble {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    border: none;
+    border-top-right-radius: 4px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    white-space: pre-wrap;
+  }
+  .bubble.rich {
+    background: transparent;
+    border: none;
+    padding: 0;
+    max-width: 100%;
+    box-shadow: none;
+  }
+
+  /* Formatted Text in Chat Bubbles */
+  .formatted-text p {
+    margin: 0 0 0.75rem 0;
+  }
+  .formatted-text p:last-child {
+    margin-bottom: 0;
+  }
+  .formatted-text h1, .formatted-text h2, .formatted-text h3 {
+    margin: 0.85rem 0 0.45rem 0;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .formatted-text h1 { font-size: 1.25rem; }
+  .formatted-text h2 { font-size: 1.15rem; }
+  .formatted-text h3 { font-size: 1.05rem; }
+  .formatted-text ul, .formatted-text ol {
+    margin: 0.4rem 0 0.75rem 1.4rem;
+    padding: 0;
+  }
+  .formatted-text li {
+    margin-bottom: 0.35rem;
+  }
+  .formatted-text code.inline-code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    background: var(--code-bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--accent);
+  }
+  .formatted-text pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+  }
+  .formatted-text strong {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .formatted-text a {
+    color: var(--accent);
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.15s ease;
+  }
+
+  /* Interactive Macro Breakdown Visualizer Widget */
+  .macro-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .macro-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.65rem;
+  }
+  .macro-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .macro-calories-badge {
+    background: var(--accent-subtle);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    padding: 0.2rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .macro-bar {
+    height: 12px;
+    background: var(--border);
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .macro-seg {
+    height: 100%;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .macro-seg.protein { background: var(--macro-protein); }
+  .macro-seg.carbs { background: var(--macro-carbs); }
+  .macro-seg.fat { background: var(--macro-fat); }
+  .macro-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+  }
+  .macro-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .macro-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Interactive Workout Checkboxes */
+  .workout-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    margin: 0.25rem 0;
+    transition: background 0.15s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  .workout-item:hover {
+    background: var(--surface-hover);
+  }
+  .workout-item input[type="checkbox"] {
+    margin-top: 0.25rem;
+    cursor: pointer;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+  }
+  .workout-item.completed {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  /* Embedded Video & Image Media */
+  .media-card {
+    margin-top: 0.75rem;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    position: relative;
+  }
+  .media-card video {
+    width: 100%;
+    max-height: 420px;
+    display: block;
+    outline: none;
+    border-radius: 14px 14px 0 0;
+  }
+  .media-card img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px 14px 0 0;
+  }
+  .media-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.85rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .media-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .media-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .media-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+  .media-btn:hover {
+    color: var(--text);
+  }
+
+  /* Message Actions Toolbar */
+  .msg-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.2rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .msg-row:hover .msg-actions {
+    opacity: 1;
+  }
+  .msg-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-xs);
+  }
+  .msg-action-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: #cbd5e1;
+  }
+  .msg-action-btn.copied {
+    color: var(--accent);
+    border-color: var(--accent-border);
+    background: var(--accent-subtle);
+  }
+
+  /* Typing / Thinking Animation */
+  .typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  .typing-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .typing-dot {
+    width: 6.5px;
+    height: 6.5px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: typing-bounce 1.4s infinite ease-in-out both;
+  }
+  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+  .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+  .typing-text {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+  }
+
+  @keyframes typing-bounce {
+    0%, 80%, 100% {
+      transform: scale(0.65);
+      opacity: 0.35;
+    }
+    40% {
+      transform: scale(1.15) translateY(-2px);
+      opacity: 1;
+    }
+  }
+
+  /* Example Prompts Bar */
+  .composer-wrapper {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.03);
+    z-index: 10;
+  }
+  .composer-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem 1.25rem;
+  }
+  .prompts-container {
+    display: flex;
+    gap: 0.55rem;
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+    scrollbar-width: thin;
+  }
+  .prompts-container::-webkit-scrollbar {
+    height: 4px;
+  }
+  .prompts-container::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+  .prompt-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent-border);
+    border-radius: 20px;
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+  }
+  .prompt-chip:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(5, 150, 105, 0.25);
+  }
+
+  /* Form & Composer */
+  form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 0.45rem 0.6rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  form:focus-within {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  }
+  textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    max-height: 140px;
+    line-height: 1.5;
+    padding: 0.4rem 0.5rem;
+  }
+  textarea::placeholder {
+    color: var(--text-muted);
+  }
+  .composer-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+  }
+  .composer-icon-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+  .composer-icon-btn.mic-active {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+    animation: pulseMic 1.5s infinite;
+  }
+  @keyframes pulseMic {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent-gradient);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+  }
+  .send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+  }
+
+  /* Slide-Out Pantry Drawer */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .pantry-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 380px;
+    max-width: 90vw;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    z-index: 101;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+  }
+  .pantry-drawer.open {
+    transform: translateX(0);
+  }
+  .drawer-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .drawer-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .drawer-search {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-search input {
+    width: 100%;
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    font-size: 0.88rem;
+  }
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .pantry-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color 0.15s ease;
+  }
+  .pantry-card:hover {
+    border-color: var(--accent-border);
+  }
+  .pantry-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pantry-item-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .pantry-category {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    background: var(--accent-subtle);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .pantry-item-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .pantry-item-actions {
+    margin-top: 0.35rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .pantry-add-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.55rem;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .pantry-add-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* A2UI Component Styles */
+  .a2card {
+    border: 1px solid var(--border);
+    border-top: 3.5px solid var(--accent);
+    border-radius: 18px;
+    padding: 1.35rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    max-width: 100%;
+    margin-top: 0.5rem;
+    transition: box-shadow 0.2s ease;
+  }
+  .a2card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+  .a2card + .a2card, .a2col > .a2card { margin-top: 0.75rem; }
+  .a2col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .a2row { display: flex; flex-direction: row; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .a2row.between { justify-content: space-between; }
+  .a2text { margin: 0; line-height: 1.5; }
+  .a2text.a2-h1 { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+  .a2text.a2-h2 { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+  .a2text.a2-h3 { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+  .a2text.a2-h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+  .a2text.a2-caption { font-size: 0.85rem; color: var(--text-muted); }
+  .a2divider { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; width: 100%; }
+  .a2img { max-width: 100%; border-radius: 12px; display: block; box-shadow: var(--shadow-sm); }
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.25rem;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  /* Printable recipe styling */
+  @media print {
+    header, .composer-wrapper, .drawer-backdrop, .pantry-drawer, .msg-actions { display: none !important; }
+    body, #log { height: auto; overflow: visible; background: #fff; color: #000; }
+    .bubble { border: 1px solid #ccc; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="header-brand">
+      <div class="header-logo">🥗</div>
+      <div class="header-titles">
+        <div class="header-title">Recomp &amp; Pantry Coach</div>
+        <div class="header-subtitle">Body Recomposition &amp; High-Protein Meal Planning</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Pantry Drawer Button -->
+      <button type="button" id="pantryDrawerBtn" class="header-btn" title="View pantry stock">
+        <span class="material-symbols-outlined" style="color:var(--accent);">kitchen</span>
+        <span>Pantry</span>
+        <span class="pantry-count-badge">10</span>
+      </button>
+
+      <!-- Theme Toggle (Dark/Gym Mode) -->
+      <button type="button" id="themeToggleBtn" class="header-btn" title="Toggle Dark/Gym Mode">
+        <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+      </button>
+
+      <!-- Reset Session Button -->
+      <button type="button" id="newSessionBtn" class="header-btn" title="Start a fresh conversation">
+        <span class="material-symbols-outlined">restart_alt</span>
+        <span>New Session</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="log">
+  <div class="welcome-card" id="welcomeBanner">
+    <div class="welcome-icon">🏋️‍♂️🍳🥗</div>
+    <h2>Welcome to Recomp &amp; Pantry Coach</h2>
+    <p>Your AI assistant for body recomposition, calorie deficit targets, and high-protein meals crafted from ingredients you have in your home right now. Pick an example below or ask anything!</p>
+    <div class="feature-pills">
+      <div class="feature-pill">🎯 Interactive Macro Breakdown</div>
+      <div class="feature-pill">🥫 Real-time Pantry Sync</div>
+      <div class="feature-pill">🎙️ Hands-free Voice Input</div>
+      <div class="feature-pill">🏋️ Workout Set Checklist</div>
+      <div class="feature-pill">🎥 Omni Video Enabled</div>
+    </div>
+  </div>
+</div>
+
+<div class="composer-wrapper">
+  <div class="composer-inner">
+    <!-- Clickable Example Prompts tailored to project_brief.md -->
+    <div class="prompts-container" id="promptsContainer">
+      <div class="prompt-chip" data-prompt="Calculate my macros for fat loss: 80kg, 180cm, 28yo male, moderate activity, 500 kcal deficit">
+        <span>🎯</span>
+        <span>Deficit Macro Targets</span>
+      </div>
+      <div class="prompt-chip" data-prompt="I have chicken breast, eggs, rice, and broccoli in my kitchen — make a high-protein dinner recipe with macro breakdown">
+        <span>🍗</span>
+        <span>Cook From Pantry</span>
+      </div>
+      <div class="prompt-chip" data-prompt="What ingredients are currently in my pantry and fridge stock?">
+        <span>🥫</span>
+        <span>Check Pantry Stock</span>
+      </div>
+      <div class="prompt-chip" data-prompt="Give me an upper body hypertrophy workout routine to preserve muscle mass while cutting">
+        <span>🏋️</span>
+        <span>Muscle Preservation Routine</span>
+      </div>
+      <div class="prompt-chip" data-prompt="Generate a short video showing how to plate a high-protein seared salmon and quinoa dish">
+        <span>🎥</span>
+        <span>Generate Dish Video</span>
+      </div>
+    </div>
+
+    <form id="form">
+      <textarea id="input" rows="1" placeholder="Ask about macros, pantry recipes, workouts, or dictate… (Enter to send, Shift+Enter for newline)" autofocus></textarea>
+      
+      <!-- Voice Input Dictation Button -->
+      <button type="button" id="micBtn" class="composer-icon-btn" title="Dictate prompt with voice">
+        <span class="material-symbols-outlined">mic</span>
+      </button>
+
+      <!-- Send Button -->
+      <button type="submit" class="send-btn" title="Send message">
+        <span class="material-symbols-outlined">arrow_upward</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Slide-Out Pantry Drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="pantry-drawer" id="pantryDrawer">
+  <div class="drawer-header">
+    <div class="drawer-title">
+      <span class="material-symbols-outlined" style="color:var(--accent);">kitchen</span>
+      <span>Pantry &amp; Fridge Stock</span>
+    </div>
+    <button type="button" class="header-btn" id="closeDrawerBtn" style="padding:0.3rem 0.5rem;">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="drawer-search">
+    <input type="text" id="pantrySearch" placeholder="Search pantry ingredients…">
+  </div>
+  <div class="drawer-body" id="pantryItemsContainer">
+    <!-- Populated by JS -->
+  </div>
+</aside>
+
+<script>
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const welcomeBanner = document.getElementById("welcomeBanner");
+const newSessionBtn = document.getElementById("newSessionBtn");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+const themeIcon = document.getElementById("themeIcon");
+const pantryDrawerBtn = document.getElementById("pantryDrawerBtn");
+const pantryDrawer = document.getElementById("pantryDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+const pantrySearch = document.getElementById("pantrySearch");
+const pantryItemsContainer = document.getElementById("pantryItemsContainer");
+const micBtn = document.getElementById("micBtn");
+
+// 1. Theme Management (Dark / Light Gym Mode)
+let currentTheme = localStorage.getItem("recomp_theme") || "light";
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("recomp_theme", theme);
+  themeIcon.textContent = theme === "dark" ? "light_mode" : "dark_mode";
+}
+applyTheme(currentTheme);
+themeToggleBtn.addEventListener("click", () => {
+  applyTheme(currentTheme === "dark" ? "light" : "dark");
+});
+
+// 2. Session Management
+let currentUserId = "web-user-" + Math.random().toString(36).substring(2, 10);
+function resetSession() {
+  currentUserId = "web-user-" + Math.random().toString(36).substring(2, 10);
+  log.innerHTML = "";
+  if (welcomeBanner) {
+    log.appendChild(welcomeBanner);
+  }
+  input.focus();
+}
+newSessionBtn.addEventListener("click", resetSession);
+
+// 3. Auto-expand Textarea
+input.addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = Math.min(this.scrollHeight, 140) + "px";
+});
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    form.requestSubmit();
+  }
+});
+
+// 4. Hands-Free Voice Input (Web Speech API)
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = "en-US";
+
+  let recognizing = false;
+
+  micBtn.addEventListener("click", () => {
+    if (recognizing) {
+      recognition.stop();
+      return;
+    }
+    try {
+      recognition.start();
+      recognizing = true;
+      micBtn.classList.add("mic-active");
+    } catch (e) {
+      console.warn("Speech recognition error", e);
+    }
+  });
+
+  recognition.onresult = (event) => {
+    let transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      transcript += event.results[i][0].transcript;
+    }
+    input.value = transcript;
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 140) + "px";
+  };
+
+  recognition.onend = () => {
+    recognizing = false;
+    micBtn.classList.remove("mic-active");
+  };
+
+  recognition.onerror = () => {
+    recognizing = false;
+    micBtn.classList.remove("mic-active");
+  };
+} else {
+  micBtn.title = "Voice dictation not supported in this browser";
+  micBtn.style.opacity = "0.5";
+}
+
+// 5. Pantry Inventory Data & Drawer
+const PANTRY_ITEMS = [
+  { name: "Boneless Skinless Chicken Breast", category: "Protein", qty: "600g", macros: "165 kcal | 31g P | 3.6g F" },
+  { name: "Canned Wild Tuna in Water", category: "Protein", qty: "3 cans (360g)", macros: "116 kcal | 26g P | 1.0g F" },
+  { name: "Liquid Egg Whites", category: "Protein", qty: "500ml", macros: "52 kcal | 11g P | 0.2g F" },
+  { name: "Non-Fat Plain Greek Yogurt", category: "Dairy", qty: "750g", macros: "59 kcal | 10g P | 0.4g F" },
+  { name: "Whey Protein Isolate (Vanilla)", category: "Supplements", qty: "900g", macros: "370 kcal | 85g P | 1.5g F" },
+  { name: "Fresh Baby Spinach", category: "Vegetables", qty: "300g", macros: "23 kcal | 2.9g P | 0.4g F" },
+  { name: "Broccoli Florets", category: "Vegetables", qty: "500g", macros: "34 kcal | 2.8g P | 0.4g F" },
+  { name: "Whole Rolled Oats", category: "Grains", qty: "1000g", macros: "389 kcal | 17g P | 66g C" },
+  { name: "Organic Canned Black Beans", category: "Grains", qty: "2 cans (800g)", macros: "91 kcal | 6.0g P | 16g C" },
+  { name: "Extra Virgin Olive Oil", category: "Healthy Fats", qty: "500ml", macros: "884 kcal | 100g Fat" }
+];
+
+function renderPantryDrawer(filterText = "") {
+  pantryItemsContainer.innerHTML = "";
+  const filtered = PANTRY_ITEMS.filter(it => 
+    it.name.toLowerCase().includes(filterText.toLowerCase()) || 
+    it.category.toLowerCase().includes(filterText.toLowerCase())
+  );
+  
+  filtered.forEach(it => {
+    const card = el("div", "pantry-card");
+    card.innerHTML = `
+      <div class="pantry-card-top">
+        <span class="pantry-item-name">${escapeHtml(it.name)}</span>
+        <span class="pantry-category">${escapeHtml(it.category)}</span>
+      </div>
+      <div class="pantry-item-meta">In Stock: <strong>${escapeHtml(it.qty)}</strong> &bull; ${escapeHtml(it.macros)}</div>
+      <div class="pantry-item-actions">
+        <button class="pantry-add-btn">+ Insert in Prompt</button>
+      </div>
+    `;
+    card.querySelector(".pantry-add-btn").addEventListener("click", () => {
+      input.value = (input.value ? input.value + ", " : "Make a high-protein recipe with ") + it.name;
+      closeDrawer();
+      input.focus();
+    });
+    pantryItemsContainer.appendChild(card);
+  });
+}
+
+function openDrawer() {
+  renderPantryDrawer();
+  pantryDrawer.classList.add("open");
+  drawerBackdrop.classList.add("open");
+}
+function closeDrawer() {
+  pantryDrawer.classList.remove("open");
+  drawerBackdrop.classList.remove("open");
+}
+pantryDrawerBtn.addEventListener("click", openDrawer);
+closeDrawerBtn.addEventListener("click", closeDrawer);
+drawerBackdrop.addEventListener("click", closeDrawer);
+pantrySearch.addEventListener("input", (e) => renderPantryDrawer(e.target.value));
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* ----------------------------------------------------------------------------
+ * Interactive Macro Breakdown Extractor
+ * -------------------------------------------------------------------------- */
+function renderMacroVisualizer(text) {
+  // Look for target calories, protein, carbs, and fat
+  let calMatch = text.match(/(?:Target Daily Intake|Daily Target|Target Calories)[^:\n]*:\s*\*?\*?(\d{3,4})/i);
+  if (!calMatch) {
+    calMatch = text.match(/(?:Calories?|TDEE)[^:\n]*:\s*\*?\*?(\d{3,4})/i);
+  }
+  const pMatch = text.match(/(?:Protein|Protein Target)[^:\n]*:\s*\*?\*?(\d{2,3})g?/i);
+  const cMatch = text.match(/(?:Carb|Carbs|Carbohydrate|Carbohydrates|Carb Target)[^:\n]*:\s*\*?\*?(\d{2,3})g?/i);
+  const fMatch = text.match(/(?:Fat|Fat Target)[^:\n]*:\s*\*?\*?(\d{2,3})g?/i);
+
+  if (!calMatch || !pMatch) return "";
+
+  const cals = parseInt(calMatch[1], 10);
+  const pGrams = parseInt(pMatch[1], 10);
+  const cGrams = cMatch ? parseInt(cMatch[1], 10) : Math.round((cals * 0.4) / 4);
+  const fGrams = fMatch ? parseInt(fMatch[1], 10) : Math.round((cals * 0.25) / 9);
+
+  const pKcal = pGrams * 4;
+  const cKcal = cGrams * 4;
+  const fKcal = fGrams * 9;
+  const totalMacroKcal = pKcal + cKcal + fKcal || cals;
+
+  const pPct = Math.round((pKcal / totalMacroKcal) * 100);
+  const cPct = Math.round((cKcal / totalMacroKcal) * 100);
+  const fPct = Math.max(0, 100 - pPct - cPct);
+
+  return `
+    <div class="macro-card">
+      <div class="macro-header">
+        <span class="macro-title">
+          <span class="material-symbols-outlined" style="color:var(--accent); font-size:1.15rem;">pie_chart</span>
+          Interactive Macro Distribution
+        </span>
+        <span class="macro-calories-badge">🎯 ${cals} kcal / day</span>
+      </div>
+      <div class="macro-bar">
+        <div class="macro-seg protein" style="width: ${pPct}%;" title="Protein: ${pGrams}g (${pPct}%)"></div>
+        <div class="macro-seg carbs" style="width: ${cPct}%;" title="Carbs: ${cGrams}g (${cPct}%)"></div>
+        <div class="macro-seg fat" style="width: ${fPct}%;" title="Fat: ${fGrams}g (${fPct}%)"></div>
+      </div>
+      <div class="macro-legend">
+        <div class="macro-pill">
+          <span class="macro-dot" style="background:var(--macro-protein);"></span>
+          <span><strong>${pGrams}g</strong> Protein (${pPct}%)</span>
+        </div>
+        <div class="macro-pill">
+          <span class="macro-dot" style="background:var(--macro-carbs);"></span>
+          <span><strong>${cGrams}g</strong> Carbs (${cPct}%)</span>
+        </div>
+        <div class="macro-pill">
+          <span class="macro-dot" style="background:var(--macro-fat);"></span>
+          <span><strong>${fGrams}g</strong> Fat (${fPct}%)</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ----------------------------------------------------------------------------
+ * Lightweight Markdown & Workout Tracker Renderer
+ * -------------------------------------------------------------------------- */
+function formatMarkdown(rawText) {
+  if (!rawText) return "";
+
+  // Insert macro visualizer if macros are detected
+  const macroWidgetHtml = renderMacroVisualizer(rawText);
+
+  // Strip any raw <a2ui-json> or <a2a_datapart_json> envelopes from text display
+  let cleanText = rawText
+    .replace(/<a2ui-json>[\s\S]*?<\/a2ui-json>/gi, "")
+    .replace(/<a2a_datapart_json>[\s\S]*?<\/a2a_datapart_json>/gi, "")
+    .trim()
+    .replace(/\n\s*---\s*$/, "");
+
+  const lines = cleanText.split("\n");
+  const processedBlocks = [];
+  let currentList = null;
+  let listType = null;
+
+  if (macroWidgetHtml) {
+    processedBlocks.push(macroWidgetHtml);
+  }
+
+  function closeList() {
+    if (currentList) {
+      processedBlocks.push(currentList);
+      currentList = null;
+      listType = null;
+    }
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Check for standalone video URL (.mp4)
+    const videoMatch = trimmed.match(/https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?/i);
+    if (videoMatch && trimmed.length < 250) {
+      closeList();
+      const videoUrl = videoMatch[0];
+      const vidId = "vid-" + Math.random().toString(36).substring(2, 8);
+      processedBlocks.push(
+        `<div class="media-card">` +
+          `<video id="${vidId}" controls playsinline autoplay muted loop preload="metadata">` +
+            `<source src="${escapeHtml(videoUrl)}" type="video/mp4">` +
+          `</video>` +
+          `<div class="media-footer">` +
+            `<span class="media-tag"><span class="material-symbols-outlined" style="font-size:1.05rem;">videocam</span> Omni Video Preview</span>` +
+            `<div class="media-actions">` +
+              `<button class="media-btn" title="Picture in Picture" onclick="const v=document.getElementById('${vidId}'); if(v) v.requestPictureInPicture()"><span class="material-symbols-outlined" style="font-size:1.1rem;">picture_in_picture_alt</span></button>` +
+              `<button class="media-btn" title="Fullscreen" onclick="const v=document.getElementById('${vidId}'); if(v) v.requestFullscreen()"><span class="material-symbols-outlined" style="font-size:1.1rem;">fullscreen</span></button>` +
+              `<a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener" class="media-btn" title="Open in new tab"><span class="material-symbols-outlined" style="font-size:1.1rem;">open_in_new</span></a>` +
+            `</div>` +
+          `</div>` +
+        `</div>`
+      );
+      continue;
+    }
+
+    // Check for markdown image syntax ![alt](url)
+    const mdImgMatch = trimmed.match(/^!\[([^\]]*)\]\((https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp)(?:\?[^\s)]*)?)\)/i);
+    if (mdImgMatch) {
+      closeList();
+      const altText = mdImgMatch[1] || "Plated Presentation";
+      const imgUrl = mdImgMatch[2];
+      processedBlocks.push(
+        `<div class="media-card">` +
+          `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(altText)}" loading="lazy">` +
+          `<div class="media-footer">` +
+            `<span class="media-tag"><span class="material-symbols-outlined" style="font-size:1.05rem;">image</span> ${escapeHtml(altText)}</span>` +
+            `<a href="${escapeHtml(imgUrl)}" target="_blank" rel="noopener" class="media-btn" title="View Full Size"><span class="material-symbols-outlined" style="font-size:1.1rem;">open_in_new</span></a>` +
+          `</div>` +
+        `</div>`
+      );
+      continue;
+    }
+
+    // Check for standalone image URL (.jpg, .png, .webp)
+    const imgMatch = trimmed.match(/https?:\/\/[^\s"'<>]+\.(?:jpg|jpeg|png|webp)(?:\?[^\s"'<>]*)?/i);
+    if (imgMatch && trimmed.length < 250 && !trimmed.startsWith("![")) {
+      closeList();
+      const imgUrl = imgMatch[0];
+      processedBlocks.push(
+        `<div class="media-card">` +
+          `<img src="${escapeHtml(imgUrl)}" alt="Plated Dish" loading="lazy">` +
+          `<div class="media-footer">` +
+            `<span class="media-tag"><span class="material-symbols-outlined" style="font-size:1.05rem;">image</span> Plated Presentation</span>` +
+            `<a href="${escapeHtml(imgUrl)}" target="_blank" rel="noopener" class="media-btn" title="View Full Size"><span class="material-symbols-outlined" style="font-size:1.1rem;">open_in_new</span></a>` +
+          `</div>` +
+        `</div>`
+      );
+      continue;
+    }
+
+    // Interactive Workout Set Checklist (e.g. Set 1: Bench Press 80kg x 8 reps)
+    const workoutSetMatch = trimmed.match(/^(?:[-*]\s+)?(?:\[\s?\]\s*)?(Set\s+\d+:?|Exercise\s+\d+:?)\s+(.+)/i);
+    if (workoutSetMatch) {
+      closeList();
+      const setLabel = workoutSetMatch[1];
+      const setDetails = workoutSetMatch[2];
+      processedBlocks.push(
+        `<div class="workout-item" onclick="this.classList.toggle('completed'); const cb=this.querySelector('input'); if(cb) cb.checked=!cb.checked;">` +
+          `<input type="checkbox" onclick="event.stopPropagation(); this.closest('.workout-item').classList.toggle('completed', this.checked);">` +
+          `<span><strong>${escapeHtml(setLabel)}</strong> ${inlineFormat(setDetails)}</span>` +
+        `</div>`
+      );
+      continue;
+    }
+
+    // Unordered list item (- or *)
+    const ulMatch = trimmed.match(/^[-*]\s+(.+)/);
+    if (ulMatch) {
+      if (listType !== "ul") {
+        closeList();
+        currentList = "<ul>";
+        listType = "ul";
+      }
+      currentList += `<li>${inlineFormat(ulMatch[1])}</li>`;
+      continue;
+    }
+
+    // Ordered list item (1. 2.)
+    const olMatch = trimmed.match(/^\d+\.\s+(.+)/);
+    if (olMatch) {
+      if (listType !== "ol") {
+        closeList();
+        currentList = "<ol>";
+        listType = "ol";
+      }
+      currentList += `<li>${inlineFormat(olMatch[1])}</li>`;
+      continue;
+    }
+
+    closeList();
+
+    if (!trimmed) continue;
+
+    if (trimmed.startsWith("### ")) {
+      processedBlocks.push(`<h3>${inlineFormat(trimmed.substring(4))}</h3>`);
+    } else if (trimmed.startsWith("## ")) {
+      processedBlocks.push(`<h2>${inlineFormat(trimmed.substring(3))}</h2>`);
+    } else if (trimmed.startsWith("# ")) {
+      processedBlocks.push(`<h1>${inlineFormat(trimmed.substring(2))}</h1>`);
+    } else {
+      processedBlocks.push(`<p>${inlineFormat(trimmed)}</p>`);
+    }
+  }
+  closeList();
+
+  return processedBlocks.join("");
+}
+
+function inlineFormat(text) {
+  let escaped = escapeHtml(text);
+  escaped = escaped.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+  escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  escaped = escaped.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  escaped = escaped.replace(/(^|[^">])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  return escaped;
+}
+
+function bubble(who) {
+  const row = el("div", "msg-row " + who);
+  const avatar = el("div", "avatar " + who, who === "agent" ? "🥗" : "👤");
+  const container = el("div", "msg-bubble-container");
+  const b = el("div", "bubble");
+
+  container.appendChild(b);
+
+  if (who === "agent") {
+    row.appendChild(avatar);
+    row.appendChild(container);
+  } else {
+    row.appendChild(container);
+    row.appendChild(avatar);
+  }
+
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+  return { row, bubbleElement: b, container };
+}
+
+let typingInterval = null;
+
+function clearTypingIndicator() {
+  if (typingInterval) {
+    clearInterval(typingInterval);
+    typingInterval = null;
+  }
+}
+
+function showTypingIndicator(bubbleElement) {
+  clearTypingIndicator();
+
+  bubbleElement.innerHTML = `
+    <div class="typing-indicator" role="status" aria-label="Coach is thinking">
+      <div class="typing-dots">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+      </div>
+      <span class="typing-text" id="activeTypingText">Coach is thinking…</span>
+    </div>
+  `;
+
+  const thinkingSteps = [
+    "Coach is thinking…",
+    "Checking pantry inventory…",
+    "Calculating macro targets…",
+    "Tailoring high-protein recipe…",
+    "Finalizing recommendations…"
+  ];
+  let stepIdx = 0;
+  typingInterval = setInterval(() => {
+    const txtEl = bubbleElement.querySelector("#activeTypingText");
+    if (!txtEl) {
+      clearTypingIndicator();
+      return;
+    }
+    stepIdx = (stepIdx + 1) % thinkingSteps.length;
+    txtEl.style.opacity = "0.2";
+    setTimeout(() => {
+      const elNow = bubbleElement.querySelector("#activeTypingText");
+      if (elNow) {
+        elNow.textContent = thinkingSteps[stepIdx];
+        elNow.style.opacity = "1";
+      }
+    }, 180);
+  }, 2200);
+}
+
+function addMessageActions(container, textToCopy) {
+  if (!textToCopy) return;
+  const actions = el("div", "msg-actions");
+  
+  // Copy button
+  const copyBtn = el("button", "msg-action-btn");
+  copyBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.95rem;">content_copy</span><span>Copy</span>`;
+  copyBtn.title = "Copy response to clipboard";
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      copyBtn.classList.add("copied");
+      copyBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.95rem;">check</span><span>Copied!</span>`;
+      setTimeout(() => {
+        copyBtn.classList.remove("copied");
+        copyBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.95rem;">content_copy</span><span>Copy</span>`;
+      }, 2000);
+    } catch (e) {
+      console.warn("Clipboard write failed", e);
+    }
+  });
+
+  // Export / Print button
+  const printBtn = el("button", "msg-action-btn");
+  printBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.95rem;">print</span><span>Print / Export</span>`;
+  printBtn.title = "Print or export recipe / workout";
+  printBtn.addEventListener("click", () => {
+    const printWin = window.open("", "_blank");
+    printWin.document.write(`
+      <html>
+      <head>
+        <title>Recomp &amp; Pantry Coach Export</title>
+        <style>
+          body { font-family: system-ui, sans-serif; padding: 2rem; max-width: 700px; margin: 0 auto; line-height: 1.6; }
+          h1, h2, h3 { color: #059669; }
+          code { background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; }
+          .macro-card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+        </style>
+      </head>
+      <body>
+        <h1>🥗 Recomp &amp; Pantry Coach</h1>
+        <hr/>
+        ${formatMarkdown(textToCopy)}
+        <script>window.onload = function() { window.print(); }<\/script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
+  });
+
+  actions.appendChild(copyBtn);
+  actions.appendChild(printBtn);
+  container.appendChild(actions);
+}
+
+/* ----------------------------------------------------------------------------
+ * A2UI mini-renderer (v0.8 Basic Catalog subset).
+ * -------------------------------------------------------------------------- */
+function boundStr(v) {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v.literalString === "string") return v.literalString;
+  return "";
+}
+
+function childIds(props) {
+  const ids = [];
+  if (props && typeof props.child === "string") ids.push(props.child);
+  const ch = props && props.children;
+  if (ch && Array.isArray(ch.explicitList)) for (const c of ch.explicitList) if (typeof c === "string") ids.push(c);
+  return ids;
+}
+
+function iconName(n) {
+  return String(n || "").replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/\s+/g, "_").toLowerCase();
+}
+
+function buildNode(id, comps, seen) {
+  if (!id || seen.has(id)) return null;
+  seen.add(id);
+  const spec = comps[id];
+  if (!spec || typeof spec !== "object") return null;
+  const type = Object.keys(spec)[0];
+  const props = spec[type] || {};
+  const kids = () => childIds(props).map(cid => buildNode(cid, comps, seen)).filter(Boolean);
+
+  switch (type) {
+    case "Card": {
+      const d = el("div", "a2card"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Column":
+    case "List": {
+      const horizontal = type === "List" && props.direction === "horizontal";
+      const d = el("div", horizontal ? "a2row" : "a2col"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Row": {
+      const d = el("div", "a2row" + (props.distribution === "spaceBetween" ? " between" : ""));
+      kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Text": {
+      const t = el("div", "a2text");
+      const hint = String(props.usageHint || "body").toLowerCase();
+      if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(hint)) t.classList.add("a2-" + hint);
+      else if (hint === "caption") t.classList.add("a2-caption");
+      t.textContent = boundStr(props.text);
+      return t;
+    }
+    case "Divider":
+      return el("hr", "a2divider");
+    case "Image": {
+      const src = boundStr(props.url || props.src);
+      if (!/^https?:\/\//i.test(src)) return null;
+
+      if (src.toLowerCase().endsWith(".mp4")) {
+        const vid = el("video", "a2img");
+        vid.src = src;
+        vid.controls = true;
+        vid.autoplay = true;
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        return vid;
+      }
+
+      const img = el("img", "a2img");
+      img.src = src;
+      img.alt = boundStr(props.alt) || "";
+      img.loading = "lazy";
+      return img;
+    }
+    case "Icon": {
+      const s = el("span", "material-symbols-outlined");
+      s.textContent = iconName(boundStr(props.name) || props.name);
+      return s;
+    }
+    default:
+      return null;
+  }
+}
+
+function renderSurface(messages, container) {
+  const comps = {};
+  const roots = [];
+  for (const m of messages) {
+    if (m.beginRendering && typeof m.beginRendering.root === "string") roots.push(m.beginRendering.root);
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.id && c.component) comps[c.id] = c.component;
+  }
+  let rootIds = roots.filter(r => comps[r]);
+  if (rootIds.length === 0) {
+    const referenced = new Set();
+    for (const id in comps) { const spec = comps[id]; childIds(spec[Object.keys(spec)[0]] || {}).forEach(c => referenced.add(c)); }
+    rootIds = Object.keys(comps).filter(id => !referenced.has(id));
+  }
+  let drew = false;
+  for (const rid of rootIds) { const node = buildNode(rid, comps, new Set()); if (node) { container.appendChild(node); drew = true; } }
+  return drew;
+}
+
+function flattenText(messages) {
+  const out = [];
+  for (const m of messages) {
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.component && c.component.Text) out.push(boundStr(c.component.Text.text));
+  }
+  return out.join("\n").trim();
+}
+
+function renderReply(bubbleObj, parts) {
+  clearTypingIndicator();
+  const { bubbleElement, container } = bubbleObj;
+  bubbleElement.innerHTML = "";
+  const texts = parts.filter(p => p && (p.kind === "text" || (!p.kind && p.text))).map(p => p.text || "");
+  const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
+
+  const textStr = texts.join("\n").trim();
+  let fullTextForCopy = textStr;
+
+  if (textStr) {
+    const formattedDiv = el("div", "formatted-text");
+    formattedDiv.innerHTML = formatMarkdown(textStr);
+    bubbleElement.appendChild(formattedDiv);
+  }
+
+  if (a2ui.length) {
+    bubbleElement.classList.add("rich");
+    if (!renderSurface(a2ui, bubbleElement)) {
+      const fallback = flattenText(a2ui);
+      bubbleElement.appendChild(el("div", null, fallback || "(no card content)"));
+      if (fallback) fullTextForCopy += "\n" + fallback;
+    } else {
+      const a2text = flattenText(a2ui);
+      if (a2text) fullTextForCopy += "\n" + a2text;
+      const macroWidgetHtml = renderMacroVisualizer(a2text);
+      if (macroWidgetHtml) {
+        const wrap = el("div");
+        wrap.innerHTML = macroWidgetHtml;
+        bubbleElement.appendChild(wrap.firstElementChild);
+      }
+    }
+  }
+
+  if (!bubbleElement.childNodes.length) {
+    bubbleElement.textContent = "(no response)";
+  } else {
+    addMessageActions(container, fullTextForCopy);
+  }
+
+  log.scrollTop = log.scrollHeight;
+}
+
+// Hook up the clickable prompt chips
+document.querySelectorAll(".prompt-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const prompt = chip.getAttribute("data-prompt");
+    if (prompt) {
+      input.value = prompt;
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 140) + "px";
+      form.requestSubmit();
+    }
+  });
+});
+
+// Chat submit handler
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+
+  bubble("user").bubbleElement.textContent = text;
+  input.value = "";
+  input.style.height = "auto";
+  
+  const agentBubble = bubble("agent");
+  showTypingIndicator(agentBubble.bubbleElement);
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, user_id: currentUserId })
+    });
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); }
+    renderReply(agentBubble, data.parts || []);
+  } catch (e) {
+    clearTypingIndicator();
+    agentBubble.bubbleElement.innerHTML = `<span style="color:#ef4444; font-weight:600;">Error: ${escapeHtml(e.message)}</span>`;
+  }
+});
+</script>
+</body>
+</html>
